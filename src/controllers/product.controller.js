@@ -93,9 +93,14 @@ export const toggleProductStatus = async (req, res) => {
 };
 
 export const getProductsByCategory = async (req, res) => {
-    const { id } = req.params
+    const { id } = req.params;
     try {
-        const products = await product.findAll({ where: { ProductCategory_ID: id } })
+        const products = await product.findAll({
+            where: {
+                ProductCategory_ID: id,
+                State: 1 // Agrega esta condición
+            }
+        });
         res.json(products);
     } catch (error) {
         return res.status(500).json({ message: error.message });
