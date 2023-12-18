@@ -36,20 +36,30 @@ export const getUser = async (req, res) => {
 };
 
 export const getCurrentUser = async (req, res) => {
+    try {
+        const token = req.cookies.token;
+        console.log('Token:', token); // Verifica si el token está llegando correctamente
 
-    const token = req.cookies.token
-    console.log(token)
-    const user = jwt.decode(token, TOKEN_SECRET)
-    console.log("user")
-    console.log(user)
+        const user = jwt.decode(token, TOKEN_SECRET);
+        console.log('Decoded User:', user); // Verifica si el token se decodifica correctamente
 
-    req.params = {
-        ...req.params,
-        id: user?.id || user.ID_User
+        const userId = user?.id || user?.ID_User;
+        console.log('User ID:', userId); // Verifica el ID del usuario obtenido
+
+        if (!userId) {
+            return res.status(401).json({ error: "No se pudo obtener el ID del usuario" });
+        }
+
+        req.params = {
+            ...req.params,
+            id: userId
+        };
+
+        return getUser(req, res);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
-
-    return getUser(req, res)
-}
+};
 
 export const checkForDuplicates = async (req, res, next) => {
     try {
@@ -214,7 +224,7 @@ export const deleteUser = async (req, res) => {
     }
 };
 
-// --------------------------- Mesero ------------------------------------- //
+// -------------------c-------- Mesero ------------------------------------- //
 
 export const getWaiters = async (req, res) => {
     try {
@@ -396,7 +406,7 @@ export const getUserCookies = (req, res) => {
     res.json({
         cookies
     })
-}
+};
 
 export const NewPassword = async (req, res) => {
     const { token, Password } = req.body;
@@ -406,13 +416,14 @@ export const NewPassword = async (req, res) => {
         console.log('Password:', Password);
 
         const tokenDecode = jwt.decode(token, TOKEN_SECRET)
+        console.log('Token Decode:', tokenDecode);
+
         const foundUser = await user.findOne({
             where: {
                 ID_User: tokenDecode.id
             }
         });
 
-        
         console.log('Found user:', foundUser);
 
         const passwordHast = await bcrypt.hash(Password, 10)
@@ -430,4 +441,4 @@ export const NewPassword = async (req, res) => {
         console.error('Error:', error);
         return res.status(500).json({ message: error.message, hasError: true });
     }
-}
+};

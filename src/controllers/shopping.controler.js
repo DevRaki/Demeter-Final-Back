@@ -150,7 +150,6 @@ export const getShopingByProvider = async (req, res) => {
                 model: supplier,
                 required: true
             }],
-            group: "Datetime"
         })
 
         res.json(shoppingBySupplier);
@@ -215,19 +214,20 @@ export const disableShop = async (req, res) => {
     }
 };
 
-// export const updateShopping = async (req, res) => {
-//     const { id } = req.params;
-//     try {
-//         const updateShop = await shopping.findOne({
-//             where: {
-//                 ID_Shopping: id
-//             }
-//         });
-
-//         updateShop.set(req.body);
-//         await updateShop.save();
-//         return res.json(updateShop);
-//     } catch (error) {
-//         return res.status(500).json({ message: error.message });
-//     }
-// }; 
+export const getShoppingByDate = async (req, res) => {
+    try {
+      const shoppingByDate = await shopping.findAll({
+        attributes: [
+          [sequelize.fn('DATE', sequelize.col('Datetime')), 'shoppingDate'],
+          [sequelize.fn('COUNT', sequelize.col('*')), 'totalShopping'],
+          [sequelize.fn('SUM', sequelize.col('Total')), 'totalAmount'],
+        ],
+        group: [sequelize.fn('DATE', sequelize.col('Datetime'))],
+        raw: true,
+      });
+  
+      res.json(shoppingByDate);
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  };

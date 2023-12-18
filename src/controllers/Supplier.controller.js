@@ -89,6 +89,18 @@ export const deleteSupplier = async (req, res) => {
     try {
         const { id } = req.params;
         
+        const existSupplirInShoppings = await shopping.findOne({
+            where: {
+                Supplier_ID: id
+            }
+        })
+
+        if (existSupplirInShoppings) {
+            return res.status(403).json({
+                message: "El provedor no puede ser eliminado",
+                useDelete: false
+            })
+        }
         await supplier.destroy({
             where: {
                 ID_Supplier: id
