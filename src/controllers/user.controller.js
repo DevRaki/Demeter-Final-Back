@@ -230,7 +230,8 @@ export const getWaiters = async (req, res) => {
     try {
         const users = await user.findAll({
             where: {
-                TypeUser_ID: 2
+                TypeUser_ID: 2,
+                State: 1
             }
         });
         res.json(users);
@@ -238,6 +239,20 @@ export const getWaiters = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+
+export const getWaiters2 = async (req, res) => {
+    try {
+        const users = await user.findAll({
+            where: {
+                TypeUser_ID: 2,
+            }
+        });
+        res.json(users);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 
 export const getWaiter = async (req, res) => {
     const { id } = req.params

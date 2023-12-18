@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { getUsers, getUser, checkForDuplicates, createUser, updateUser, toggleUserStatus, deleteUser, login, logout, profile, verifyToken, forgotPassword, NewPassword, getUserCookies } from '../controllers/user.controller.js'; // Empleados
 import { getWaiters, createWaiter, duplicateWaiter, getWaiter, getCurrentUser } from '../controllers/user.controller.js'; // Meseros
-import { editProfile, changePassword } from "../controllers/user.controller.js"; // Usuario logueado
+import { editProfile, changePassword, getWaiters2 } from "../controllers/user.controller.js"; // Usuario logueado
 
 import { authRequired } from '../middlewares/validateToken.js'
 
@@ -23,6 +23,7 @@ router.put('/change_password/:id', changePassword);
 
 // --------------------------- Mesero ------------------------------------- //
 router.get('/waiter', getWaiters);
+router.get('/waiter2', getWaiters2);
 router.get('/waiter/:id', getWaiter);
 router.post('/add_waiter', duplicateWaiter, createWaiter);
 
