@@ -122,7 +122,11 @@ export const deleteCategory_products = async (req, res) => {
 
 export const getCategoriesProducts = async (req, res) => {
     try {
-        const products = await productCategory.findAll()
+        const products = await productCategory.findAll({
+            where: {
+                State: 1
+            }
+        });
         res.json(products);
     } catch (error) {
         return res.status(500).json({ message: error.message });
